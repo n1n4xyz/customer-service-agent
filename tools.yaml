@@ -1,4 +1,32 @@
 sources:
-  # TODO: Add sources
+  betty-products-db:
+    kind: mysql
+    host: ${MYSQL_HOST}
+    port: ${MYSQL_PORT}
+    database: ${MYSQL_DATABASE}
+    user: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    queryParams:
+      tls: skip-verify
+      allowCleartextPasswords: "true"
+
 tools:
-  # TODO: Add tool definitions
+  get-product-price:
+    kind: mysql-sql
+    source: betty-products-db
+    description: >
+      Look up the price of a product sold at Betty's Bird Boutique.
+      Takes a product name or part of a product name and returns any
+      matching products with their prices. Use this whenever a customer
+      asks what something costs or whether the store carries an item.
+    parameters:
+      - name: product_name
+        type: string
+        description: >
+          The product name or partial name to search for, for example
+          "bird feeder", "millet" or "parrot".
+    statement: |
+      SELECT product_name, price
+      FROM products
+      WHERE product_name LIKE CONCAT('%', ?, '%')
+      ORDER BY product_name;
