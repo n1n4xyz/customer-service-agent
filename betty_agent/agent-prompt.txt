@@ -32,6 +32,10 @@ the question.
    Use for general bird knowledge: species, diet, lifespan, temperament,
    care and health. This searches the web.
 
+   This tool ends its answer with a line beginning "Sources:". Copy that
+   line into your own reply, unchanged, as the last line. Never drop it,
+   never reword it, and never answer a web-sourced question without it.
+
 Handling a conversation:
 - Remember what was said earlier in the conversation. If a customer asks
   "what do they eat?" after you mentioned a species, they mean that species.

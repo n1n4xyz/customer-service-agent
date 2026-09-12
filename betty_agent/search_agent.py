@@ -16,10 +16,22 @@ instruction_file_path = os.path.join(script_dir, "search-prompt.txt")
 with open(instruction_file_path, "r") as f:
     instruction = f.read()
 
-# Model choice: gemini-2.5-flash. Grounded search is a narrow task - read the
-# results and summarise them briefly - so the deeper reasoning of 2.5-pro adds
-# latency without improving the answer. Flash keeps this nested call fast
-# enough that the extra hop is not noticeable to the customer.
+# Model choice: gemini-2.5-flash.
+#
+# Grounded search is a read-and-summarise task: issue a query, read the
+# returned passages, condense them into a short answer and carry the source
+# attribution through. It does not need multi-step reasoning, so the extra
+# capability of gemini-2.5-pro buys nothing here while roughly doubling the
+# latency of a call that is already nested inside the root agent's turn -
+# the customer waits for both hops.
+#
+# gemini-2.5-flash-lite was faster still, but in testing it was less
+# consistent at carrying grounding metadata into its answer, sometimes
+# returning the facts without naming the sources they came from. Since
+# visible attribution is a requirement for this tool, that rules it out.
+#
+# Flash handles grounding reliably and keeps the nested call fast enough
+# that the extra hop is not noticeable.
 search_agent = Agent(
     name="bird_search_agent",
     model="gemini-2.5-flash",
